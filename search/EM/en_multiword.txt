@@ -1,0 +1,15 @@
+MWEM_asforme
+MWEM_astome
+MWEM_beyonddoubt
+MWEM_forsure
+MWEM_frommypointofview
+MWEM_goeswithoutsaying
+MWEM_inmyeyes
+MWEM_inmyopinion
+MWEM_inmyview
+MWEM_iwouldsay
+MWEM_looklike
+MWEM_nodoubt
+MWEM_ofcourse
+MWEM_sureenough
+MWEM_tomymind

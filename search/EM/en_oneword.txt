@@ -1,0 +1,14 @@
+OWEM_OWEMapparently
+OWEM_OWEMarguably
+OWEM_OWEMcertainly
+OWEM_OWEMdecidedly
+OWEM_OWEMdefinitely
+OWEM_OWEMevidently
+OWEM_OWEMmaybe
+OWEM_OWEMnaturally
+OWEM_OWEMobviously
+OWEM_OWEMperhaps
+OWEM_OWEMpossibly
+OWEM_OWEMpresumably
+OWEM_OWEMprobably
+OWEM_OWEMsure

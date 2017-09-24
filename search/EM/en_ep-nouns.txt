@@ -1,0 +1,9 @@
+ENEM_bestofmyknowledge
+ENEM_havedoubt
+ENEM_havefeeling
+ENEM_havenodoubt
+ENEM_mybelief
+ENEM_myquessis
+ENEM_theredoubt
+ENEM_therefeelingthat
+ENEM_therenodoubt

@@ -1,0 +1,23 @@
+EAEM_becertain
+EAEM_becertainto
+EAEM_beconvinced
+EAEM_benatural
+EAEM_benotcertain
+EAEM_benotcertainto
+EAEM_benotconvinced
+EAEM_benotlikely
+EAEM_benotlikelythat
+EAEM_benotlikelyto
+EAEM_benotsure
+EAEM_beobvious
+EAEM_bepossible
+EAEM_bepossible \1
+EAEM_beprobable
+EAEM_besure
+EAEM_itisclear
+EAEM_itisnotclear
+EAEM_likely
+EAEM_likelythat
+EAEM_likelyto
+EAEM_notunlikely
+EAEM_unlikely
