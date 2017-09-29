@@ -7,10 +7,10 @@ import time
 tmp_in = '/home/masha/temp2/tf_in.txt.split'
 tmp_out_en = '/home/masha/temp2/tf_in.txt.split.tags'
 tmp_out_ru = '/home/masha/temp2/tf_in.txt.split.tags.known'
-
-xml_fname = '/home/masha/birmingham/data/all200prof3.tmx'#input file all200prof
+# just standard pos tagging, no DM annotation
+xml_fname = '/home/masha/birmingham/data/fin_filtered_rltc.tmx'#input file all200prof
 xml_fname_out = '/home/masha/temp2/en.tmx.tagged'
-xml_fname_out2 = '/home/masha/temp2/profCONN.tagged.tmx'
+xml_fname_out2 = '/home/masha/temp2/tagged_fin_filtered_rltc.tmx'
 
 start_time = time.time()
 
@@ -36,16 +36,16 @@ def exec_tmp_en():
     #cmd = 'echo sdf > {0}'.format(tmp_out)
     cmd = '/home/masha/py/tag_tmx/en_2ttagged.sh'
     os.system(cmd)
-    cmd = '/home/masha/py/tag_tmx/en_CONNglue.sh'
-    os.system(cmd)    
+    #cmd = '/home/masha/py/tag_tmx/en_CONNglue.sh' # just standard pos tagging, no DM annotation
+    #os.system(cmd)    
 
 def exec_tmp_ru():
     os.chdir('/home/masha/temp2/')
     #cmd = 'echo sdf > {0}'.format(tmp_out)
     cmd = '/home/masha/py/tag_tmx/ru_2ttagged.sh'
     os.system(cmd)
-    cmd = '/home/masha/py/tag_tmx/ru_CONNglue.sh'
-    os.system(cmd) 
+    #cmd = '/home/masha/py/tag_tmx/ru_CONNglue.sh' # just standard pos tagging, no DM annotation
+    #os.system(cmd) 
     
 def process_str(s, lang):
     write_tmp(s)
@@ -64,7 +64,7 @@ def process_str(s, lang):
 
 def process_tmx(fname_in, fname_out, slang):
     doc = minidom.parse(fname_in)
-    
+    punct =('.', '!', '?', '...')
     node = doc.documentElement
     translation_units = doc.getElementsByTagName("tu")
     
@@ -83,6 +83,8 @@ def process_tmx(fname_in, fname_out, slang):
                 continue
             
             text = seg0.childNodes[-1].data
+			if not text.endswith(punct):
+				text = text+'.'
             lang = tuv.getAttributeNode('xml:lang').nodeValue
             #st = tuv.getAttributeNode('type').nodeValue    
      

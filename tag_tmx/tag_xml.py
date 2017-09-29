@@ -63,7 +63,7 @@ def process_str(s, lang):
 
 def process_tmx(fname_in, fname_out, slang):
     doc = minidom.parse(fname_in)
-    
+    punct =('.', '!', '?', '...')
     node = doc.documentElement
     translation_units = doc.getElementsByTagName("tu")
     
@@ -82,6 +82,9 @@ def process_tmx(fname_in, fname_out, slang):
                 continue
             
             text = seg0.childNodes[-1].data
+			if not text.endswith(punct):
+                text = text+'.'
+
             lang = tuv.getAttributeNode('xml:lang').nodeValue
             #st = tuv.getAttributeNode('type').nodeValue    
      

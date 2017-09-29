@@ -8,9 +8,9 @@ tmp_in = '/home/masha/temp3/tf_in.txt.split'
 tmp_out_en = '/home/masha/temp3/tf_in.txt.split.tags'
 tmp_out_ru = '/home/masha/temp3/tf_in.txt.split.tags.known'
 
-xml_fname = '/home/masha/birmingham/data/finalDavid.tmx'#input file all200prof
+xml_fname = '/home/masha/birmingham/data/test_rltc.tmx'#input file all200prof
 xml_fname_out = '/home/masha/temp3/en.tmx.tagged'
-xml_fname_out2 = '/home/masha/temp3/davidEM.tagged.tmx'
+xml_fname_out2 = '/home/masha/temp3/tagged_test_rltc.tmx'
 
 start_time = time.time()
 
@@ -64,7 +64,7 @@ def process_str(s, lang):
 
 def process_tmx(fname_in, fname_out, slang):
     doc = minidom.parse(fname_in)
-    
+    punct =('.', '!', '?', '...')
     node = doc.documentElement
     translation_units = doc.getElementsByTagName("tu")
     
@@ -83,6 +83,8 @@ def process_tmx(fname_in, fname_out, slang):
                 continue
             
             text = seg0.childNodes[-1].data
+            if not text.endswith(punct):
+                text = text+'.'            
             lang = tuv.getAttributeNode('xml:lang').nodeValue
             #st = tuv.getAttributeNode('type').nodeValue    
      
