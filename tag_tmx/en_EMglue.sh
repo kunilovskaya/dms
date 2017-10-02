@@ -105,8 +105,8 @@ sed -i -re 's/_PP_(I|we) can_MD_can be_VB_be (\S+[^_]\S+[^\s] ){,2}sure_JJ_sure/
 sed -i -re "s/_PP_(I|we) (am_VBP_be|are_VBP_be) not_RB_not (\S+[^_]\S+[^\s] ){,2}sure_JJ_sure/_EAEM_benotsure/g" *.tags
 sed -i -re "s/_PP_(I|we) (am_VBP_be|are_VBP_be) (\S+[^_]\S+[^\s] ){,2}sure_JJ_sure/_EAEM_besure/g" *.tags
 
-sed -i -re 's/,_,_, sure_RB_sure/,_,_, sure_OWEM_OWEMsure/g' *.tags
-sed -i -re 's/So_RB_so sure_RB_sure ,_,_,/So_OWEM_OWEMsure ,_,_,/g' *.tags
+sed -i -re 's/,_,_, sure_RB_sure/,_,_, sure_OWEM_sure/g' *.tags
+sed -i -re 's/So_RB_so sure_RB_sure ,_,_,/So_OWEM_sure ,_,_,/g' *.tags
 
 sed -i -re "s/_PP_it is_VBZ_be probable_JJ_probable/_EAEM_beprobable/g" *.tags
 
@@ -120,30 +120,30 @@ sed -i -re "s/_PP_it is_VBZ_be natural_JJ_natural/_EAEM_benatural/g" *.tags
 
 #oneword
 
-sed -i -re 's/_RB_apparently/_OWEM_OWEMapparently/g' *.tags
-sed -i -re 's/_RB_arguably/_OWEM_OWEMarguably/g' *.tags
+sed -i -re 's/_RB_apparently/_OWEM_apparently/g' *.tags
+sed -i -re 's/_RB_arguably/_OWEM_arguably/g' *.tags
 
-sed -i -re 's/_RB_certainly/_OWEM_OWEMcertainly/g' *.tags
+sed -i -re 's/_RB_certainly/_OWEM_certainly/g' *.tags
 
-sed -i -re 's/_RB_decidedly/_OWEM_OWEMdecidedly/g' *.tags
+sed -i -re 's/_RB_decidedly/_OWEM_decidedly/g' *.tags
 
-sed -i -re 's/_RB_definitely/_OWEM_OWEMdefinitely/g' *.tags
+sed -i -re 's/_RB_definitely/_OWEM_definitely/g' *.tags
 
-sed -i -re 's/_RB_maybe/_OWEM_OWEMmaybe/g' *.tags
+sed -i -re 's/_RB_maybe/_OWEM_maybe/g' *.tags
 
-sed -i -re 's/_RB_naturally ,_,_,/_OWEM_OWEMnaturally ,_,_,/g' *.tags
+sed -i -re 's/_RB_naturally ,_,_,/_OWEM_naturally ,_,_,/g' *.tags
 
-sed -i -re 's/_RB_obviously/_OWEM_OWEMobviously/g' *.tags
+sed -i -re 's/_RB_obviously/_OWEM_obviously/g' *.tags
 
-sed -i -re 's/_RB_perhaps/_OWEM_OWEMperhaps/g' *.tags
+sed -i -re 's/_RB_perhaps/_OWEM_perhaps/g' *.tags
 
-sed -i -re 's/_RB_possibly/_OWEM_OWEMpossibly/g' *.tags
+sed -i -re 's/_RB_possibly/_OWEM_possibly/g' *.tags
 
-sed -i -re 's/_RB_presumably/_OWEM_OWEMpresumably/g' *.tags
+sed -i -re 's/_RB_presumably/_OWEM_presumably/g' *.tags
 
-sed -i -re 's/_RB_probably/_OWEM_OWEMprobably/g' *.tags
+sed -i -re 's/_RB_probably/_OWEM_probably/g' *.tags
 
-sed -i -re 's/_OWEM_evidently/_OWEM_OWEMevidently/g' *.tags
+sed -i -re 's/_OWEM_evidently/_OWEM_evidently/g' *.tags
 
 #epistemic verbs - mind negative positives
 sed -i -re 's/_PP_(I|we) think_VBP_think of_IN_of/_notEVEM_ithinkof/g' *.tags
