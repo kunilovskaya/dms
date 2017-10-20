@@ -1,28 +1,20 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # coding: utf-8
+# этот скрипт - для стандартных TMX с профессиональными переводами (для учебных переводов другой скрипт, определяющий файл источник по данным в атрибуте filesource, поскольку prop в rusltc ненадежны из-за множественности)
 # извлекаем из tmx частотность размеченных единиц (СONN, EM) по списку, считаем количество предложений=сегментов в tmx на этом языке для расчета нормализованной частоты; в общем проверяем насколько данные в tmx воспроизводят количественные характеристики txt-архива. 
-#pulls out text-identifying filenames from Filesource attribute (!!) for each lang, extracts and collects of text-strings belonging to one text (from segs), counts number of sents + item counts per text
+#pulls out text-identifying filenames from prop tag (!!) for each tu, extracts and collects of text-strings belonging to one text (from segs), counts number of sents + item counts per text
 # modified Sept 19, 2017
+#DIRTY BUT WORKING Oct 04, 2017
 
-import sys
+from __future__ import division
+import sys, codecs
 import re
 from xml.dom import minidom
-
-import sys, codecs
-from xml.dom import minidom
-
 import numpy as np
 import scipy.stats as stats
-# проверяем число имен файлов в profTMX (для учебных переводов другой скрипт, определяющий файл источник по данным в атрибуте filesource, поскольку prop в rusltc ненадежны из-за множественности) и сколько в каждом файле текстовых сегментов (для того, чтоб посчитать колво-предложений надо тегировать корпус и считать SENT)
-#<tu creationdate="20170310T003108Z" creationid="y"><prop type="Txt::Note">en_010-ru_010</prop>
-#<tuv xml:lang="EN"><seg>I_PP_I started_VBD_start launching_VBG_launch businesses_NNS_business at_IN_at a_DT_a very_RB_very young_JJ_young age_NN_age (_(_( I_PP_I 'm_VBP_be 25_RB_@card@ now_RB_now )_)_) ._SENT_.
-#</seg></tuv>
-#<tuv xml:lang="RU"><seg>Я_P-1-snn_я занимаюсь_Vmip1s-m-e_заниматься бизнесом_Ncmsin_бизнес с_Sp-g_с очень_R_очень раннего_Afpmsgf_ранний возраста_Ncmsgn_возраст (_-_( сейчас_P-----r_сейчас мне_P-1-sdn_я 25_Mc---d_25 лет_Ncmpgn_год )_-_) ._SENT_.
-#</seg></tuv> </tu>
-
-arg1 = '/home/masha/birmingham/data/profEM_tagged.tmx' #sys.argv[1]#test_uniqConn.tagged.tmx /home/masha/birmingham/data/new2_uniq240mass-media.tmx
-arg2 = '/home/masha/birmingham/bi-ling_EMs.ls' #sys.argv[2]#список поисковых запросов
-#arg3 = '/home/masha/birmingham/data/description/all_uniq_fnpairs.txt' #list of content in <prop type="Txt::Note">EN_1_265-RU_1_265_1</prop> #that caused errors because props contained pairs EN_1_265.txt-RU_1_265_2.txt (mind the last number!!!)
+ 
+arg1 = '/home/masha/birmingham/data/CONN_profmedia.tmx' #sys.argv[1]
+arg2 = '/home/masha/birmingham/searchlists/bi-ling_CONNs.ls' #sys.argv[2]#список поисковых запросов
 
 queries = codecs.open(arg2, 'r', 'utf-8').readlines()
 doc = minidom.parse(arg1)
@@ -30,7 +22,7 @@ doc = minidom.parse(arg1)
 alltuvs = {}
 tus = doc.getElementsByTagName("tu") #возвращает список tu (элемента, содержащего анализируемые prop)
 
-def en_list_fntuvs(doc): #возвращает дедуплицированный список имен файлов 
+def en_list_fntuvs(doc): #возвращает дедуплицированный список имен файлов из проп
 	en_fnlst = []
 	errors = 0
 	for tu in tus:
@@ -105,7 +97,7 @@ def pulldoms_by_lang(lst, lang, alltuvs):
 						alltuvs[fn_short].append(tuv)
 					else: continue
 	#print len(alltuvs[fn_short])						
-	return alltuvs
+	return alltuvs #словарь с именами файлов (ключи) и списком tuv (value)
 				
 def extract_text(tuv):
 		
@@ -126,37 +118,29 @@ def dom2txt(fn, dic):
 		
 	fntuvs = dic[fn] # this is a list of dom for each fn
 	texts = {fn:[]}
-	size = []
+	fn_totSENTs = 0
+	tokens = 0
+	
 	
 	for fntuv in fntuvs:
-		fntuv = extract_text(fntuv)#this produces a list of sents in a seg
-		if fntuv == None:
-			continue
-		fntuv = fntuv.replace('?_SENT_?', '._SENT_. SPLIT')
-		fntuv = fntuv.replace('!_SENT_!', '._SENT_. SPLIT')
-		fntuv = fntuv.replace('._SENT_.', '._SENT_. SPLIT')
-		fntuv = fntuv.split('SPLIT')
 		
-		for sent in fntuv:
-			sent_size = len(sent.split())
-			if sent_size == 0:
-				continue
-			texts[fn].append(sent) # creates a list of all text strings which equal to a SENT
-			
-			size.append(sent_size)
-	filesize = sum(size)
-	#print filesize
+		fntuv = extract_text(fntuv)#this is content of each seg from tuvs on the list for each fn
+		#print fntuv.encode('utf-8')
+		#print type(fntuv)
+		if fntuv == None:
+			print >> sys.stderr, fn
+			continue
+		fn_totSENTs += fntuv.count('_SENT_')
+		tokens += len(fntuv.split())
+		texts[fn].append(fntuv)
 				
-	return texts, filesize	# this contains a DIC which has fn as keys and lists of textedsents as values
-
-
+	return texts, fn_totSENTs, tokens	# this contains a DIC which has fn as keys and lists of textedsents as values
 
 def count_sents(fn, dic): #see ru_pickled_sents.py 
 
 	countSENTs = 0
 	count_under4 = 0
 	allsents = dic[fn]# this is a list of all sentences attributed to one fn
-	
 	for text in allsents:
 		#print text
 			
@@ -168,11 +152,11 @@ def count_sents(fn, dic): #see ru_pickled_sents.py
 			#print >> sys.stderr, text #>> sys.stderr,
 			continue					
 					
-		SENTs= text.count('._SENT_.')
+		SENTs= text.count('_SENT_') #it should return exactly 1 because text is a list of SENTENCES already after split
 			
 		countSENTs = countSENTs + SENTs	
 		#print countSENTs
-	return countSENTs, count_under4 
+	return old_countSENTs, count_under4 
 
 def extract_each_item(fn, texted):
 	count_item = 0
@@ -203,22 +187,45 @@ rus = ru_list_fntuvs(doc)
 ru_alltuvs = {fn_short.strip(): [] for fn_short in rus}
 ru_alldoms = pulldoms_by_lang(rus, "RU", ru_alltuvs)
 
-print 'filename', '\t', 'tokens', '\t', 'SENTs', '\t', 'ITEMs','\t', 'under4', '\n'
+print 'filename', '\t', 'tuvs', '\t', 'SENTs', '\t', 'wc',  '\t', 'ITEMs', '\t', 'normed_freq', '\n' #,'\t', 'under4', '\n'
 count_totenitems = 0
 count_totruitems = 0
+en_size = 0
+ru_size = 0
+en_totsents = 0
+ru_totsents = 0
+tot_en_nfreq = []
+tot_ru_nfreq = []
+
 for en in ens:
 		
-	en_alltuvs_texted, en_tokens = dom2txt(en, en_alldoms)
+	en_alltuvs_texted, en_sents, en_tokens = dom2txt(en, en_alldoms)
 	#print type(en_alltuvs_texted)
-	en_sents, under4 = count_sents(en, en_alltuvs_texted)
+	#old_en_sents, under4 = count_sents(en, en_alltuvs_texted)
 	en_items = extract_each_item(en, en_alltuvs_texted)
 	count_totenitems = count_totenitems + en_items
-	print en, '\t',en_tokens, '\t', en_sents, '\t',en_items, '\t', 	under4
-print '\t','\t','\t',count_totenitems, '\n'
+	en_size += en_tokens
+	en_totsents += en_sents
+	en_nfreq = en_items/en_sents*100
+	tot_en_nfreq.append(en_nfreq)
+	
+	print en, '\t', len(en_alldoms[en]), '\t', en_sents, '\t',en_tokens,  '\t',en_items, '\t', en_nfreq, '\n' #	under4
+
 for ru in rus:
-	ru_alltuvs_texted, ru_tokens = dom2txt(ru, ru_alldoms)		
-	ru_sents, under4 = count_sents(ru, ru_alltuvs_texted)
+	ru_alltuvs_texted, ru_sents, ru_tokens = dom2txt(ru, ru_alldoms)		
+	#old_ru_sents, under4 = count_sents(ru, ru_alltuvs_texted)
 	ru_items = extract_each_item(ru, ru_alltuvs_texted)
 	count_totruitems = count_totruitems + ru_items
-	print ru, '\t', ru_tokens, '\t', ru_sents, '\t', ru_items, '\t', under4
-print '\t','\t','\t',count_totruitems, '\n'
+	ru_size += ru_tokens
+	ru_totsents += ru_sents
+	ru_nfreq = ru_items/ru_sents*100
+	tot_ru_nfreq.append(ru_nfreq)
+	
+	print ru, '\t', len(ru_alldoms[ru]), '\t', ru_sents, '\t', ru_tokens,  '\t', ru_items, '\t', ru_nfreq, '\n' # under4
+
+print '\t', 'Sources: ', '\t', 'profTargets: '
+print 'Corpus size (', arg1.split('/')[-1], ')', '\t', en_size, '\t', ru_size
+print 'Number of all hits: ', '\t', count_totenitems, '\t', count_totruitems
+print 'No. of sents: ', '\t', en_totsents, '\t', ru_totsents
+print 'Mean for normalized freqs: ', '\t', np.mean(tot_en_nfreq), '\t', np.mean(tot_ru_nfreq)
+print 'Standard deviation for normalized freqs: ', '\t', np.std(tot_en_nfreq), '\t', np.std(tot_ru_nfreq)

@@ -2,6 +2,7 @@
 #connectives responsible for signally relations between parts of text
 # this version of the script is customized for tagging tmx (the difference is the file extention: en tmx pipe requires tags, not tagged, while ru tmx pipe needs known)
 
+
 #main code
 sed -i -e 's/_C_а вернее_Afcmsnf_верный ,_,_,/вернее_CONN_вернее ,_,_,/g' *.known
 
