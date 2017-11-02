@@ -4,7 +4,7 @@
 '''
 # limit rltc.tmx to segments from specified files 
 # and to only one translation from the first (ex. RU_1_34_1.txt) translation file
-# rltc.tmx has sentences from other files. An input <tu> can contain more that one translation.
+# rltc.tmx has sentences from other files. An <tu> in the input can contain more that one translation.
 # the filenames should be extracted from <tuv filesource="EN_6_3.head.txt", not <prop> 
 
 # Sept 24, 2017 this is a working version: this code leaves a lot of empty lines, надо добавить аналог sed -i '/^$//d' file
