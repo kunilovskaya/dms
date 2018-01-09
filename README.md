@@ -1,5 +1,5 @@
 # dms (in learners, professional and RNC (non-translated) texts or in written and spoken pop-sci (2 starndard 'prof' tmx-files with 2 reference corpora)
-# for some scripts there are duplicates in for python and ipython notebook
+# for some scripts there are duplicates in python and ipython notebook
 # the repository contains separate scripts and support files for processing/extracting statistics/visualising learners tmx and professional tmx (and reference (txt) corpora
 # ATTENTION! a lot of arguments are hard-coded!
 preprocessing (tag_tmx folder and mult_customize_tmx/uniq_customize_tmx as well as throwout_shorttexts_fromtmx.ipynb)
